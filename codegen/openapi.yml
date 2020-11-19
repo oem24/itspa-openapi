@@ -1,0 +1,271 @@
+openapi: 3.0.3
+
+info:
+  title: Notes API
+  description: "Notes micro-service"
+  contact:
+    name: "ITSPA"
+    url: "http://www.itspa.edu.mx"
+  version: "1.0.0"
+
+servers:
+- url: http://localhost:8080
+
+tags:
+- name: CREATE
+  description: "Operations for creating notes."
+- name: READ
+  description: "Operations for reading notes."
+- name: UPDATE
+  description: "Operations for updating notes."
+- name: DELETE
+  description: "Operations for deleting notes."
+
+paths:
+  /rest/api/v1/notes:
+    get:
+      tags:
+      - READ
+      summary: "Retrieve a list of all the notes"
+      description: "Use this endpoint retrieve a a list of all the existing notes"
+      operationId: "getAllNotes"
+      responses:
+        200:
+          $ref: '#/components/responses/NoteListResponse'
+        500:
+          $ref: '#/components/responses/ErrorResponse'
+
+    post:
+      tags:
+      - CREATE
+      summary: "Create a new note."
+      description: "Use this endpoint create a new note."
+      operationId: "createNote"
+      requestBody:
+        $ref: '#/components/requestBodies/CreateNoteRequest'
+      responses:
+        201:
+           $ref: '#/components/responses/EmptyResponse'
+        500:
+           $ref: '#/components/responses/ErrorResponse'
+          
+
+
+  /rest/api/v1/notes/{id}:
+    parameters:
+    - $ref: '#/components/parameters/NoteId'
+    
+    get:
+      summary: "Retrieves a note by Id."
+      description: "Use this endpoint to retrieve a specific note by its unique identifier."
+      operationId: "getNoteById"
+      tags:
+      - READ
+      responses:
+        200:
+          $ref: '#/components/responses/SingleNoteResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/ErrorResponse'
+          
+    put:
+      summary: "Update a note"
+      description: "Use this endpoint to update an existing note"
+      operationId: "updateNote"
+      tags:
+      - UPDATE
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateNoteRequest'
+      responses:
+        204:
+          $ref: '#/components/responses/EmptyResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/ErrorResponse'
+          
+
+    delete:
+      summary: "Delete a note"
+      operationId: "deleteNote"
+      description: "Use this endpoint to delete an existing note."
+      tags:
+      - DELETE
+      responses:
+        204:
+          $ref: '#/components/responses/EmptyResponse'
+        404:
+          $ref: '#/components/responses/NotFoundResponse'
+        500:
+          $ref: '#/components/responses/ErrorResponse'
+
+components:
+
+  requestBodies:
+  
+    CreateNoteRequest:
+      description: "Contains required data to create a note"
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NoteData'
+          examples:
+            create-note-request:
+              $ref: '#/components/examples/create-note-request'
+           
+              
+    UpdateNoteRequest:
+      description: "Contains required data to update a note"
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NoteData'
+          examples:
+            update-note-request:
+              $ref: '#/components/examples/update-note-request'
+              
+
+  responses:
+    
+    EmptyResponse:
+      description: "Empty response indicating the operation succeded."
+
+    SingleNoteResponse:
+      description: "Response containing a single note."
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Note'
+
+    NoteListResponse:
+      description: "Response containing a list of notes."
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Note'
+              
+    NotFoundResponse:
+      description: "Not found error response."
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            not-found-error:
+              $ref: '#/components/examples/not-found-error'
+              
+    ErrorResponse:
+      description: "Default error response containing a list of errors."
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error' 
+          examples:
+            not-found-error:
+              $ref: '#/components/examples/generic-error'
+  
+ 
+
+
+  parameters:
+  
+    NoteId:
+      name: id
+      required: true
+      allowEmptyValue: false
+      in: "path"
+      schema:
+        type: string
+        format: uuid
+      examples:
+        note-id-example:
+          $ref: '#/components/examples/note-id'
+
+  
+  schemas:
+  
+    Note:
+      type: object
+      required:
+      - id
+      - createdOn
+      - content
+      - title
+      - priority
+      properties:
+        id:
+          description: "Unique identifier for this note"
+          type: string
+          format: uuid
+        createdOn:
+          description: "Timestamp when this note was created."
+          type: string
+          format: "date-time"
+          example: "2021-01-30T08:30:00Z"
+        content:
+          description: "The content of the note"
+          type: string
+          example: "Note content"
+        title:
+          description: "The title of the note"
+          type: string
+          example: "Note title"
+        priority:
+          description: "Priority of the Note. (for sorting)"
+          type: integer
+          default: 0
+    
+    NoteData:
+      type: object
+      required:
+      - title
+      - content
+      - priority
+      properties:
+        content:
+          description: "The content of the note"
+          type: string
+        title:
+          description: "The title of the note"
+          type: string
+        priority:
+          description: "Priority of the Note. (for sorting)"
+          type: integer
+          default: 0
+
+    Error:
+      type: object
+      required:
+      - code
+      - description
+      properties:
+        code:
+          type: string
+        description:
+          type: string
+          
+  examples:
+    note-id:
+      summary: "A unique idenfifier for a note."
+      value: "123e4567-e89b-12d3-a456-426614174000"
+      
+    create-note-request:
+      summary: "Create note request"
+      value: {"title": "Note title", "content" : "Note content", "priority" : 1}
+      
+    update-note-request:
+      summary: "Update note request"
+      value: {"title": "New note title", "content" : "Updated note content", "priority" : 5}
+      
+    not-found-error:
+      summary: "Not found error"
+      value: {"code": "NOT_FOUND", "description" : "Note not found"}
+      
+    generic-error:
+      summary: "Generic error"
+      value: {"code": "INTERNAL_SERVER_ERROR", "description" : "An error occurred processing the request"}
