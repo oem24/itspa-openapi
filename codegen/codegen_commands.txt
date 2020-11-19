@@ -2,4 +2,4 @@ Commands
 
 Generate Code:
 
-java -jar openapi-generator-cli.jar generate -g spring -i openapi.yml -o ./notes-api-server --package-name mx.edu.itspa.apis.notes --model-package mx.edu.itspa.apis.notes.model --api-package mx.edu.itspa.apis.notes.api --artifact-id notes-api --group-id mx.edu.itspa.apis 
+java -jar openapi-generator-cli.jar generate -g spring -i openapi.yml -o ../notes-api --package-name mx.edu.itspa.apis.notes --model-package mx.edu.itspa.apis.notes.model --api-package mx.edu.itspa.apis.notes.api --artifact-id notes-api --group-id mx.edu.itspa.apis 
