@@ -1,0 +1,14 @@
+.openapi-generator-ignore
+README.md
+pom.xml
+src/main/java/mx/edu/itspa/apis/notes/api/ApiUtil.java
+src/main/java/mx/edu/itspa/apis/notes/api/RestApi.java
+src/main/java/mx/edu/itspa/apis/notes/api/RestApiController.java
+src/main/java/mx/edu/itspa/apis/notes/model/Error.java
+src/main/java/mx/edu/itspa/apis/notes/model/Note.java
+src/main/java/mx/edu/itspa/apis/notes/model/NoteData.java
+src/main/java/org/openapitools/OpenAPI2SpringBoot.java
+src/main/java/org/openapitools/RFC3339DateFormat.java
+src/main/java/org/openapitools/configuration/HomeController.java
+src/main/java/org/openapitools/configuration/OpenAPIDocumentationConfig.java
+src/main/resources/application.properties
