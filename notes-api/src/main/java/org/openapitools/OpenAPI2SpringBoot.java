@@ -1,6 +1,11 @@
 package org.openapitools;
 
 import com.fasterxml.jackson.databind.Module;
+
+import mx.edu.itspa.apis.notes.db.DB;
+import mx.edu.itspa.apis.notes.service.NotesService;
+import mx.edu.itspa.apis.notes.service.NotesServiceImpl;
+
 import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;
@@ -53,5 +58,15 @@ public class OpenAPI2SpringBoot implements CommandLineRunner {
     public Module jsonNullableModule() {
         return new JsonNullableModule();
     }
+    
+    @Bean
+    public NotesService notesService() {
+        return new NotesServiceImpl(database());
+    }
+    
+    public DB database() {
+    	return DB.getInstance();
+    }
+
 
 }
